@@ -29,26 +29,28 @@ def reverse_graph(g, lst):
 def kosaraju(g, gr):
     stack = []
     visited = set()
-    scc = []
+    scc, all = [], []
 
-    def dfs(g, n):
+    def dfs(g, n, log=False):
         visited.add(n)
-        scc.append(n)
         for i in g[n]:
             if i not in visited:
-                dfs(g, i)
+                if log:
+                    scc.append(i)
+                dfs(g, i, log)
         stack.append(n)
 
     for v in g.keys():
         if v not in visited:
             dfs(g, v)
-    print("__________")
     visited = set()
     for v in stack[::-1]:
         if v not in visited:
-            dfs(gr, v)
-            print(scc)
+            scc.append(v)
+            dfs(gr, v, log=True)
+            all.append(scc)
             scc = []
+    print(all)
 
 
 def get_graph(lst, inhabit=True):
