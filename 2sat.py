@@ -13,6 +13,7 @@ def sat_solver(f):
         g[negate(i[1])].append(i[0])
     print(g)
 
+
 def negate(x):
     if x[0] == "~":
         return x[1]
