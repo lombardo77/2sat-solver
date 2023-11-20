@@ -2,13 +2,15 @@
 # construct 2SAT graph
 # run SCC algorithm
 import sys
+import random
 
 
 def sat_solver(f):
     lst = verify(f)
     g = get_graph(lst)
     gr = reverse_graph(g, lst)
-    kosaraju(g, gr)
+    scc = kosaraju(g, gr)
+    print(scc)
 
 
 def negate(x):
@@ -19,7 +21,7 @@ def negate(x):
 
 
 def reverse_graph(g, lst):
-    gr = get_graph(lst, inhabit = False)
+    gr = get_graph(lst, inhabit=False)
     for v in g.keys():
         for n in g[v]:
             gr[n].append(v)
@@ -38,19 +40,22 @@ def kosaraju(g, gr):
                 if log:
                     scc.append(i)
                 dfs(g, i, log)
-        stack.append(n)
+        if not log:
+            stack.append(n)
 
-    for v in g.keys():
+    for v in g.keys():  # first traversal
         if v not in visited:
             dfs(g, v)
+
     visited = set()
-    for v in stack[::-1]:
+    for v in stack[::-1]:  # second traversal (on G^t)
         if v not in visited:
             scc.append(v)
             dfs(gr, v, log=True)
             all.append(scc)
             scc = []
-    print(all)
+
+    return all  # returns scc in topological order
 
 
 def get_graph(lst, inhabit=True):
